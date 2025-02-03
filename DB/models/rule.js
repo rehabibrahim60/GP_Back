@@ -7,6 +7,6 @@ const ruleSchema = new Schema({
         required : true ,
         unique : true ,
     },
-})
+} , {timestamps : true})
 
 export const rule = model("Rule" , ruleSchema)

@@ -32,6 +32,6 @@ role: {
     enum : ["admin" , "quality_member"]
 }
 
-})
+},{timestamps : true})
 
 export const User = model("User" , userSchema)
