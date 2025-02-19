@@ -4,7 +4,6 @@ const flagSchema = new Schema({
     flag_name : {
         type : String , 
         required : true , 
-        enum : ["red" , "yellow"]
     },
     
     
