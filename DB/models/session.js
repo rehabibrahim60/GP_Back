@@ -1,11 +1,11 @@
 import { model, Schema, Types } from "mongoose";
 
 const sessionSchema = new Schema({
-    zoomId : {
-        type : String,
-        // required : true
-        // unique : true 
-    },
+    // zoomId : {
+    //     type : String,
+    //     // required : true
+    //     // unique : true 
+    // },
     title :{
         type : String
     } ,
@@ -14,10 +14,14 @@ const sessionSchema = new Schema({
         ref : "Tutor",
         required : true,
     },
-    pdf_id : {
-        type : Types.ObjectId,
-        ref : "Pdf",
-        required : true,
+    // pdf_id : {
+    //     type : Types.ObjectId,
+    //     ref : "Pdf",
+    //     required : true,
+    // },
+    pdf_link : {
+        type : String,
+        required : true
     },
     video : {
         id : {type : String , required : true },
@@ -28,6 +32,12 @@ const sessionSchema = new Schema({
         ref : "User",
         required : true 
     },// assigned to qm
+    grade: String , 
+    lesson : String ,
+    date : {
+        type : Date , //DateTime (session date && session time)
+        required : true 
+    },
     status :{
         type : String , 
         default : "not reviewed"
