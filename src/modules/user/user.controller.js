@@ -50,6 +50,50 @@ export const login = asyncHandler(async (req,res,next)=>{
     return res.json({success : true , results :{token}})
 })
 
+//delete user
+export const deleteUser = asyncHandler(async (req , res , next) =>{
+    //check user in database
+    const user = await User.findOne({id_by_organization : req.params.id})
+    if(!user) return next(new Error("user not found" , {cause: 404}))
+    //make his token not valid
+    await Token.updateMany({user : user._id},{isValid : false})
+    //delete user from db
+    await User.findByIdAndDelete(user._id)
+    //send response
+    return res.json({success: true , message: "user deleted successfully"})
+})
+
+//update user
+export const updateUser = asyncHandler(async (req , res , next) =>{
+    //check user in database
+    const user = await User.findOne({id_by_organization : req.params.id})
+    if(!user) return next(new Error("user not found" , {cause: 404}))
+    
+    //update user
+    user.name = req.body.name ? req.body.name : user.name
+    user.id_by_organization = req.body.id_by_organization ? req.body.id_by_organization : user.id_by_organization
+    user.phone = req.body.phone ? req.body.phone : user.phone
+    user.email = req.body.email ? req.body.email : user.email
+    user.password = req.body.password ? req.body.password : user.password
+    //save user
+    await user.save()
+    //send response
+    return res.json({success: true , message: "user updated successfully"})
+})
+
+
+//find one user
+export const getUser = asyncHandler(async (req,res,next)=>{
+    const user = await User.findOne({id_by_organization : req.params.id})
+    if(!user) return next(new Error("User not found" , {cause: 404}))
+    return res.json({success : true , user})
+})
+
+//get all users
+export const allUsers = asyncHandler(async (req,res,next)=>{
+    const users = await User.find({role : "quality_member"})
+    return res.json({success : true , users})
+})
 
 
 

@@ -11,7 +11,7 @@ router.post('/',validation(tutorSchema.addTutor) ,tutorController.addTutor )
 //get all tutors 
 router.get("/", tutorController.allTutors)
 
-//get one tutors 
+//get one tutor
 router.get("/:id",validation(tutorSchema.getTutor) , tutorController.getTutor)
 
 //update tutor 

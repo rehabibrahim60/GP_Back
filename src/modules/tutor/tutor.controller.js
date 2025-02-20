@@ -15,6 +15,7 @@ export const addTutor = asyncHandler(async (req,res,next)=>{
     return res.json({success : true , message : "Tutor added successfuly"})
 })
 
+//get all tutors
 export const allTutors = asyncHandler(async (req,res,next)=>{
     const tutors = await Tutor.find()
     return res.json({success : true , tutors})

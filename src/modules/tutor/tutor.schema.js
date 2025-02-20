@@ -1,5 +1,4 @@
 import Joi from "joi";
-import { isValidObjectId } from "../../middelware/validation.middleware.js";
 
 //add new tutor schema
 export const addTutor = Joi.object({
