@@ -28,8 +28,8 @@ const userSchema = new Schema({
     },
     role: {
         type : String ,
-        required : true ,
-        enum : ["admin" , "quality_member"]
+        enum : ["admin" , "quality_member"],
+        default : "quality_member"
     }
 
 },{timestamps : true})
