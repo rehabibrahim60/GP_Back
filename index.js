@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import { connectDB } from './DB/dbConnection.js'
 import tutorRouter from "./src/modules/tutor/tutor.router.js"
 import userRouter from "./src/modules/user/user.router.js"
+import flagRouter from "./src/modules/flag/flag.router.js"
 dotenv.config()
 
 const app = express()
@@ -14,6 +15,7 @@ app.use(express.json())
 //routers
 app.use("/tutor" , tutorRouter)
 app.use("/user" , userRouter)
+app.use("/flag" , flagRouter)
 
 //connect db
 await connectDB()

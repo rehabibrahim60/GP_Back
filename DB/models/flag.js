@@ -3,7 +3,8 @@ import { model, Schema, Types } from "mongoose";
 const flagSchema = new Schema({
     flag_name : {
         type : String , 
-        required : true , 
+        required : true ,
+        unique : true 
     },
     
     
