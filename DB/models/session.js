@@ -1,11 +1,6 @@
 import { model, Schema, Types } from "mongoose";
 
 const sessionSchema = new Schema({
-    // zoomId : {
-    //     type : String,
-    //     // required : true
-    //     // unique : true 
-    // },
     title :{
         type : String
     } ,
@@ -14,11 +9,7 @@ const sessionSchema = new Schema({
         ref : "Tutor",
         required : true,
     },
-    // pdf_id : {
-    //     type : Types.ObjectId,
-    //     ref : "Pdf",
-    //     required : true,
-    // },
+
     pdf_link : {
         type : String,
         required : true
