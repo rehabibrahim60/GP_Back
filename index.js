@@ -4,6 +4,8 @@ import { connectDB } from './DB/dbConnection.js'
 import tutorRouter from "./src/modules/tutor/tutor.router.js"
 import userRouter from "./src/modules/user/user.router.js"
 import flagRouter from "./src/modules/flag/flag.router.js"
+import tutorFlagRouter from "./src/modules/tutorFlag/tutorFlag.router.js"
+import sessionRouter from "./src/modules/session/session.router.js"
 dotenv.config()
 
 const app = express()
@@ -16,6 +18,8 @@ app.use(express.json())
 app.use("/tutor" , tutorRouter)
 app.use("/user" , userRouter)
 app.use("/flag" , flagRouter)
+app.use("/tutorFlag" , tutorFlagRouter)
+app.use("/sessions", sessionRouter);
 
 //connect db
 await connectDB()
