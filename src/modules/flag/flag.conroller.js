@@ -20,7 +20,7 @@ export const getFlags = asyncHandler(async (req, res,next) => {
 export const updateFlag = asyncHandler(async (req, res , next) => {
     const flag = await Flag.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!flag) {
-        return res.status(404).json({ message: "Flag not found" });
+        return next(new Error("Flag not found" , {cause: 404})) 
     }
     res.status(200).json({ message: "Flag updated successfully", flag });
 });
@@ -28,7 +28,7 @@ export const updateFlag = asyncHandler(async (req, res , next) => {
 export const deleteFlag = asyncHandler(async (req, res , next ) => {
     const flag = await Flag.findByIdAndDelete(req.params.id);
     if (!flag) {
-        return res.status(404).json({ message: "Flag not found" });
+        return next(new Error("Flag not found" , {cause: 404})) 
     }
     res.status(200).json({ message: "Flag deleted successfully" });
 });
