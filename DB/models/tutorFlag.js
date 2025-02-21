@@ -1,6 +1,6 @@
 import { model, Schema, Types } from "mongoose";
 
-const sessionSchema = new Schema({
+const tutorFlagSchema = new Schema({
     session_id : {
         type : Types.ObjectId,
         ref : "Session",
@@ -17,4 +17,4 @@ const sessionSchema = new Schema({
     },
 },{timestamps : true})
 
-export const Session = model("Session" , sessionSchema)
+export const TutorFlag = model("TutorFlag" , tutorFlagSchema)
