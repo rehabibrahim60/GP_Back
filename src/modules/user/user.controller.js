@@ -43,11 +43,11 @@ export const login = asyncHandler(async (req,res,next)=>{
     const match = bcryptjs.compareSync(password , user.password , process.env.TOKEN_SECRET)
     if( !match) return next(new Error("invalid email or password "))
     //generate token 
-    const token = jwt.sign({email , id : user.id_by_organization , _id : user._id } , process.env.TOKEN_SECRET)
+    const token = jwt.sign({email ,  _id : user._id , role : user.role } , process.env.TOKEN_SECRET)
     //save token in token model
     await Token.create({token , user :user._id})
     //send response
-    return res.json({success : true , results :{token}})
+    return res.json({success : true , results :{token , user:user.role}})
 })
 
 //delete user

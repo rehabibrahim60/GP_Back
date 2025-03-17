@@ -2,6 +2,7 @@ import express from "express";
 import * as sessionController from "./session.controller.js"
 import * as sessionSchema from "./session.schema.js"
 import { validation } from "../../middelware/validation.middleware.js";
+import {fileUpload} from "../../utils/fileUpload.js"
 import { isAuthenicated } from "../../middelware/authentication.middelware.js";
 import { isAuthorized } from "../../middelware/authorization.middelware.js";
 
@@ -11,6 +12,7 @@ const router = express.Router();
 router.post(
     "/",
     isAuthenicated, 
+    fileUpload().single("video"),
     validation(sessionSchema.createSession),
     sessionController.createSession
 ); // Create a session
@@ -28,6 +30,7 @@ router.get(
 router.patch(
     "/:id",
     isAuthenicated, 
+    fileUpload().single("video"),
     validation(sessionSchema.updateSession), 
     sessionController.updateSession
 ); // Update session

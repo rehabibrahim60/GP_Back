@@ -32,7 +32,7 @@ router.get(
 )
 
 //update tutor 
-router.patch(
+router.put(
     "/:id" ,
     isAuthenicated,
     isAuthorized("admin"),

@@ -22,6 +22,12 @@ router.get(
     );
 
 router.get(
+    "/:id",
+    isAuthenicated,
+    flagController.getFlags
+    );
+
+router.get(
     "/search",
     isAuthenicated,
     flagController.searchFlags

@@ -1,19 +1,19 @@
-// import { model, Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 
-// const pdfSchema = new Schema({
-//     title : {
-//         type : String , 
-//         required : true , 
-//         unique : true 
-//     },
-//     file : {
-//         id : {type : String , required : true},
-//         url : {type : String , required : true},
-//     },
-//     grade: String , 
-//     lesson : String , 
-//     semester : String, 
+const pdfSchema = new Schema({
+    title : {
+        type : String , 
+        required : true , 
+        unique : true 
+    },
+    file : {
+        id : {type : String , required : true},
+        url : {type : String , required : true},
+    },
+    grade: String , 
+    lesson : String , 
+    semester : String, 
 
-// },{timestamps : true})
+},{timestamps : true})
 
-// export const Pdf = model("Pdf" , pdfSchema)
+export const Pdf = model("Pdf" , pdfSchema)
