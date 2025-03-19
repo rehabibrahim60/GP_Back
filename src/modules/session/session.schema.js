@@ -14,7 +14,7 @@ export const createSession = Joi.object({
     lesson: Joi.string().optional(),
     date: Joi.date().required(),
     status: Joi.string().valid("not reviewed", "reviewed" , "inProgress" ,"done").optional(),
-});
+}).required();
 
 export const updateSession = Joi.object({
     id: Joi.string().custom(isValidObjectId).required(),
@@ -23,11 +23,11 @@ export const updateSession = Joi.object({
     grade: Joi.string().optional(),
     lesson: Joi.string().optional(),
     date: Joi.date().optional(),
-    status: Joi.string().valid("not reviewed", "reviewed" , "inProgress" ,"done").optional(),
+    status: Joi.string().valid("not reviewed", "reviewed" , "inprogress" ,"done").optional(),
 });
 
 //used in get session by id && delete session
 export const idSchema = Joi.object({
     id: Joi.string().custom(isValidObjectId).required(),
-});
+}).required();
 

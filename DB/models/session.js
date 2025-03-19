@@ -10,9 +10,10 @@ const sessionSchema = new Schema({
         required : true,
     },
 
-    pdf_link : {
-        type : String,
-        required : true
+    pdf_id :{
+        type :Types.ObjectId , 
+        ref : "Pdf",
+        required : true 
     },
     video : {
         id : {type : String , required : true },

@@ -7,12 +7,12 @@ export const createTutorFlag = asyncHandler(async (req, res, next) => {
         flag_id : req.body.flag_id,
         comment : req.body.comment,
     });
-    res.status(201).json({ message: "TutorFlag created successfully", tutorFlag });
+    res.status(201).json({success: true , message: "TutorFlag created successfully", tutorFlag });
 });
 
 export const getTutorFlags = asyncHandler(async (req, res , next) => {
     const tutorFlags = await TutorFlag.find().populate("session_id flag_id");
-    res.status(200).json(tutorFlags);
+    res.status(200).json({success : true,tutorFlags});
 });
 
 export const getTutorFlagById = asyncHandler(async (req, res , next) => {
@@ -20,7 +20,7 @@ export const getTutorFlagById = asyncHandler(async (req, res , next) => {
     if (!tutorFlag) {
         return next(new Error("Tutor Flag not found" , {cause: 404})) 
     }
-    res.status(200).json(tutorFlag);
+    res.status(200).json({success : true,tutorFlag});
 });
 
 export const updateTutorFlag = asyncHandler(async (req, res, next) => {
@@ -28,7 +28,7 @@ export const updateTutorFlag = asyncHandler(async (req, res, next) => {
     if (!tutorFlag) {
         return next(new Error("Tutor Flag not found" , {cause: 404})) 
     }
-    res.status(200).json({ message: "TutorFlag updated successfully", tutorFlag });
+    res.status(200).json({success: true , message: "TutorFlag updated successfully", tutorFlag });
 });
 
 export const deleteTutorFlag = asyncHandler(async (req, res) => {

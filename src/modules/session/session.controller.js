@@ -55,14 +55,14 @@ import cloudinary from "../../utils/cloud.js";
 export const createSession = asyncHandler(async (req, res, next) => {
     // Check if file is provided
     console.log("file1 " , req.file);
-    const folderName = "Rehab"
+    
     if (!req.file) {
         return next(new Error("video file is required!", { cause: 400 }));
     }
     console.log("file2 " , req.file);
     // Upload PDF to Cloudinary
     const { public_id, secure_url } = await cloudinary.uploader.upload(req.file.path, {
-        folder: `${process.env.folderName}/sessions`,
+        folder: `${process.env.CLOUD_FOLDER_NAME}/sessions`,
         resource_type: "video", // Ensures Cloudinary treats it as a document
     });
     console.log("file after uploading " , req.file);
@@ -71,7 +71,9 @@ export const createSession = asyncHandler(async (req, res, next) => {
         title: req.body.title,
         tutor_id: req.body.tutor_id,
         assigned_to: req.body.assigned_to,
+        pdf_id : req.body.pdf_id,
         lesson: req.body.lesson,
+        date:req.body.date,
         video: { id: public_id, url: secure_url },
     });
     console.log(session);
@@ -83,8 +85,8 @@ export const createSession = asyncHandler(async (req, res, next) => {
 
 // Get All Sessions
 export const getAllSessions = asyncHandler(async (req, res, next) => {
-    const sessions = await Session.find().populate("tutor_id assigned_to");
-    res.status(200).json(sessions);
+    const sessions = await Session.find().populate("tutor_id assigned_to pdf_id");
+    res.status(200).json({success :true ,sessions});
 });
 
 // Get Single Session by ID
