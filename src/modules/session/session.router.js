@@ -54,7 +54,7 @@ router.get(
 router.get(
     "/qm/:id", 
     isAuthenicated,
-    validation(sessionSchema.idSchema) , 
+    // validation(sessionSchema.idSchema) , 
     sessionController.getSessionsByUserId
 ); // Get sessions by qm ID
 

@@ -46,6 +46,13 @@ export const getTutor = asyncHandler(async (req,res,next)=>{
     return res.json({success : true , tutor})
 })
 
+//find one tutor
+export const getTutorByNID = asyncHandler(async (req,res,next)=>{
+    const tutor = await Tutor.findOne({national_id : req.params.id})
+    if(!tutor) return next(new Error("Tutor not found" , {cause: 404}))
+    return res.json({success : true , tutor})
+})
+
 //delete Tutor
 export const deleteTutor = asyncHandler(async (req , res , next) =>{
     //check Tutor in database

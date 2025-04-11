@@ -27,8 +27,16 @@ router.get(
 router.get(
     "/:id",
     isAuthenicated,
-    validation(tutorSchema.getTutor) , 
+    validation(tutorSchema.idSchema) , 
     tutorController.getTutor
+)
+
+//get tutor by NID
+router.get(
+    "/nid/:id",
+    isAuthenicated,
+    validation(tutorSchema.idSchema) , 
+    tutorController.getTutorByNID
 )
 
 //update tutor 
@@ -44,7 +52,7 @@ router.delete(
     "/:id" ,
     isAuthenicated,
     isAuthorized("admin"),
-    validation(tutorSchema.deleteTutor), 
+    validation(tutorSchema.idSchema), 
     tutorController.deleteTutor)
 
 export default router

@@ -36,7 +36,7 @@ export const deleteTutorFlag = asyncHandler(async (req, res) => {
     if (!tutorFlag) {
         return next(new Error("Tutor Flag not found" , {cause: 404})) 
     }
-    res.status(200).json({ message: "TutorFlag deleted successfully" });
+    res.status(200).json({success:true , message: "TutorFlag deleted successfully" });
 });
 
 export const searchTutorFlags = asyncHandler(async (req, res) => {

@@ -13,7 +13,7 @@ export const isAuthenicated = asyncHandler(async (req,res,next)=>{
     //extract payload
     const payload = jwt.verify(token , process.env.TOKEN_SECRET)
     //check token in db
-    const tokenDB = Token.findOne({token , isValid : true})
+    const tokenDB = await Token.findOne({token , isValid : true})
     if(!tokenDB) return next(new Error("invalid token"))
     //check user existance
     const user = await User.findById(payload._id)

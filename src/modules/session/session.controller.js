@@ -78,7 +78,7 @@ export const createSession = asyncHandler(async (req, res, next) => {
     });
     console.log(session);
     
-    return res.json({ success: true, message: "session added successfully" });
+    return res.json({ success: true, message: "session added successfully" , session });
 });
 
 
@@ -94,7 +94,7 @@ export const getSessionById = asyncHandler(async (req, res, next) => {
     const session = await Session.findById(req.params.id).populate("tutor_id assigned_to");
     if (!session) return next(new Error("Session not found", { cause: 404 }));
 
-    res.status(200).json(session);
+    res.status(200).json({success:true,message:"fetched successfuly" ,session});
 });
 
 // Update Session with Video Upload
@@ -125,7 +125,7 @@ export const updateSession = asyncHandler(async (req, res, next) => {
     session.lesson = req.body.lesson ?? session.lesson;
 
     await session.save();
-    res.status(200).json({ message: "Session updated successfully", session });
+    res.status(200).json({ success:true ,message: "Session updated successfully", session });
 });
 
 // Delete Session
@@ -177,5 +177,5 @@ export const getSessionsByUserId = asyncHandler(async (req, res, next) => {
         return next(new Error("No sessions found for this user", { cause: 404 }));
     }
 
-    res.status(200).json(sessions);
+    res.status(200).json({success: true,sessions});
 });

@@ -18,7 +18,7 @@ export const idSchema = Joi.object({
 
 export const updateTutorFlag = Joi.object({
     id: Joi.string().custom(isValidObjectId).required(),
-    session_id: Joi.string().custom(isValidObjectId),
-    flag_id: Joi.string().custom(isValidObjectId),
-    comment: Joi.string().min(3).max(500),
+    session_id: Joi.string().custom(isValidObjectId).required(),
+    flag_id: Joi.string().custom(isValidObjectId).required(),
+    comment: Joi.string().min(3).max(500).required(),
 });

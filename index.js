@@ -8,6 +8,7 @@ import flagRouter from "./src/modules/flag/flag.router.js"
 import tutorFlagRouter from "./src/modules/tutorFlag/tutorFlag.router.js"
 import sessionRouter from "./src/modules/session/session.router.js"
 import pdfRouter from "./src/modules/pdf/pdf.router.js"
+import reportRouter from "./src/modules/report/report.router.js"
 import { v2 as cloudinary } from 'cloudinary';
 dotenv.config()
 
@@ -61,6 +62,7 @@ app.use("/flag" , flagRouter)
 app.use("/tutorFlag" , tutorFlagRouter)
 app.use("/session", sessionRouter);
 app.use("/pdf", pdfRouter);
+app.use("/report", reportRouter);
 
 
 //connect db

@@ -24,11 +24,19 @@ router.get(
     pdfController.allPdfs
 );
 
+//download pdf 
+router.get(
+    "/:id/download", 
+    isAuthenicated,
+    validation(pdfSchema.idSchema),
+    pdfController.downloadPdf
+);
+
 // Get a single PDF by ID
 router.get(
     "/:id",
     isAuthenicated,
-    validation(pdfSchema.getPdf),
+    validation(pdfSchema.idSchema),
     pdfController.getPdf
 );
 
@@ -45,7 +53,7 @@ router.patch(
 router.delete(
     "/:id",
     isAuthenicated,
-    validation(pdfSchema.deletePdf),
+    validation(pdfSchema.idSchema),
     pdfController.deletePdf
 );
 

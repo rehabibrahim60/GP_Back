@@ -8,10 +8,6 @@ const reportSchema = new Schema({
         required : true 
     },
     // ml models results
-    session_text : {
-        type : string ,
-        required : true 
-    },
     similarity :{
         type : Number ,
         min : 0 , 
@@ -20,22 +16,46 @@ const reportSchema = new Schema({
     },
     bad_word : [{
         word : {type : String , required : true},
-        start_time : {type : String , required : true}
+        // start_time : {type : String , required : true}
     }],
-    noise : [{
+    // noise : [{
+    //     start_time : {type : String , required : true},
+    //     end_time : {type : String , required : true},
+    // }],
+    noisy_detection : {
+        type :String,
+        required :true
+    },
+
+    key_points: {
+        type : String ,
+        required : true 
+    },
+
+    summary: {
+        type : String ,
+        required : true 
+    },
+    transcript: {
+        type : String ,
+        required : true 
+    },
+    abnormal_times : [{
         start_time : {type : String , required : true},
-        end_time : {type : String , required : true},
-    }],
-    upnormal_behaviour : [{
-        start_time : {type : String , required : true},
-        end_time : {type : String , required : true},
+        end_time :{type : String , required : true},
+        // current_status : {type : String , required : true}
     }],
     time_tracking : [{
-        start_time : {type : String , required : true},
-        end_time : {type : String , required : true},
+        start_frame : {type : String , required : true},
+        end_frame : {type : String , required : true},
     }],
+    transcript : {
+        type : String,
+        required : true
+    },
+    total_silence_duration: {type : String , required : true},
 
 
 },{timestamps : true})
 
-export const Session = model("Report" , reportSchema)
+export const Report = model("Report" , reportSchema)

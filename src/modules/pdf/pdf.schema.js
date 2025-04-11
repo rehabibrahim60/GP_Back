@@ -18,11 +18,8 @@ export const updatePdf = Joi.object({
 }).required();
 
 // Get One PDF Schema
-export const getPdf = Joi.object({
+export const idSchema = Joi.object({
     id: Joi.string().required(),
 }).required();
 
-// Delete PDF Schema
-export const deletePdf = Joi.object({
-    id: Joi.string().required(),
-}).required();
+

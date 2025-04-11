@@ -1,6 +1,7 @@
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import cloudinary from "../../utils/cloud.js";
 import { Pdf } from "../../../DB/models/pdf.js";
+import axios from "axios";
 
 // Add a new PDF
 export const addPdf = asyncHandler(async (req, res, next) => {
@@ -69,6 +70,27 @@ export const getPdf = asyncHandler(async (req, res, next) => {
 
     return res.json({ success: true, pdf });
 });
+
+//download pdf 
+export const downloadPdf = asyncHandler(async (req, res, next) => {
+    const pdf = await Pdf.findById(req.params.id);
+    if (!pdf) return next(new Error("PDF not found", { cause: 404 }));
+  
+    const pdfUrl = pdf.file.url;
+  
+    // Use axios to get the file as stream
+    const response = await axios.get(pdfUrl, {
+      responseType: "stream",
+    });
+  
+    // Set headers to simulate file download
+    res.setHeader("Content-Disposition", `attachment; filename="${pdf.title}.pdf"`);
+    res.setHeader("Content-Type", "application/pdf");
+  
+    // Pipe the stream directly to response
+    response.data.pipe(res);
+  });
+
 
 // Delete a PDF by ID
 export const deletePdf = asyncHandler(async (req, res, next) => {

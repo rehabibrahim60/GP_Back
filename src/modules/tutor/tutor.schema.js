@@ -19,11 +19,7 @@ export const updateTutor = Joi.object({
 }).required()
 
 //Get one Tutor
-export const getTutor = Joi.object({
+export const idSchema = Joi.object({
     id: Joi.string().required(),
 }).required()
 
-//delete Tutor
-export const deleteTutor = Joi.object({
-    id: Joi.string().required(),
-}).required()
