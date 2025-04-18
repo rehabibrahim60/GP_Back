@@ -28,11 +28,13 @@ export const addReport = asyncHandler(async (req,res,next)=>{
 
     
         const response = await axios.post(
-            'https://645d-34-82-174-130.ngrok-free.app/analyze-content',
+            'https://37a5-34-169-122-84.ngrok-free.app/analyze-content',
             form,
             { headers: form.getHeaders() }
         );
         const data = response.data;
+        console.log(data);
+        
 
     // Example: parse flag list to match bad_word format
     const bad_word = (data.flag || []).map(word => ({
@@ -55,7 +57,7 @@ export const addReport = asyncHandler(async (req,res,next)=>{
             end_time: t.end
         })),
         total_silence_duration : data.total_silence_duration,
-        
+        plot:data.image_base64,
         time_tracking: data.silence_intervals        // Add actual values if available
     })
     
@@ -68,6 +70,51 @@ export const addReport = asyncHandler(async (req,res,next)=>{
     return     res.status(200).json({ message: 'Report saved', report , plot : data.image_base64});
 })
 
+//get all reports
+export const allReports = asyncHandler(async (req,res,next)=>{
+    const reports = await Report.find()
+    return res.json({success : true , reports})
+})
 
 
+//find report by session id
+export const getReportBySessionID = asyncHandler(async (req,res,next)=>{
+    const report = await Report.findOne({session_id : req.params.id})
+    if(!report) return next(new Error("report not found" , {cause: 404}))
+    return res.json({success : true , report})
+})
 
+//delete report
+export const deleteReport = asyncHandler(async (req , res , next) =>{
+    //check report in database
+    const report = await Report.findById(req.params.id)
+    if(!report) return next(new Error("report not found" , {cause: 404}))
+    await Report.findByIdAndDelete(report._id)
+    //send response
+    return res.json({success: true , message: "report deleted successfully"})
+})
+
+//update report
+export const updatereport = asyncHandler(async (req , res , next) =>{
+    //check report in database
+    const report = await Report.findById(req.params.id)
+    if(!report) return next(new Error("report not found" , {cause: 404}))
+    console.log(report);
+    
+    //update report
+    report.name = req.body.name ? req.body.name : report.name
+    report.id_by_organization = req.body.id_by_organization ? req.body.id_by_organization : report.id_by_organization
+    report.phone = req.body.phone ? req.body.phone : report.phone
+    report.national_id = req.body.national_id ? req.body.national_id : report.national_id
+    //save report
+    await report.save()
+    //send response
+    return res.json({success: true , message: "report updated successfully"})
+})
+
+//find one report
+export const getreport = asyncHandler(async (req,res,next)=>{
+    const report = await Report.findById( req.params.id)
+    if(!report) return next(new Error("report not found" , {cause: 404}))
+    return res.json({success : true , report})
+})

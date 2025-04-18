@@ -91,17 +91,6 @@ cloudinary.config({
   api_secret: process.env.API_SECRET // Click 'View API Keys' above to copy your API secret
 });
 
-async function run (){
-  try{
-    const result = await cloudinary.uploader.upload("D://copied from c//Videos//Captures//screen recorder for pc windows 10 - بحث Google‏ - Google Chrome 2024-04-15 01-14-33.mp4" ,{resourse_type : 'video'})
-    console.log(result.secure_url);
-    
-  }catch(err){
-    console.log(err);
-    
-  }
-}
 
-run()
 
 app.listen(port, () => console.log(`Example app listening on port ${process.env.PORT}!`))

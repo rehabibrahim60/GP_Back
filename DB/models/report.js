@@ -54,6 +54,7 @@ const reportSchema = new Schema({
         required : true
     },
     total_silence_duration: {type : String , required : true},
+    plot: {type : String , required : true},
 
 
 },{timestamps : true})
