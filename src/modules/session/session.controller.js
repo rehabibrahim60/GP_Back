@@ -91,7 +91,7 @@ export const getAllSessions = asyncHandler(async (req, res, next) => {
 
 // Get Single Session by ID
 export const getSessionById = asyncHandler(async (req, res, next) => {
-    const session = await Session.findById(req.params.id).populate("tutor_id assigned_to");
+    const session = await Session.findById(req.params.id).populate("tutor_id assigned_to pdf_id");
     if (!session) return next(new Error("Session not found", { cause: 404 }));
 
     res.status(200).json({success:true,message:"fetched successfuly" ,session});

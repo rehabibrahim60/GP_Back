@@ -11,11 +11,14 @@ const router = express.Router();
 
 router.post(
     "/",
-    isAuthenicated, 
-    fileUpload().single("video"),
+    isAuthenicated,
+    fileUpload([
+        "video/mkv", "video/mp4", "video/mov", "video/avi"
+    ]).single("video"),
     validation(sessionSchema.createSession),
     sessionController.createSession
-); // Create a session
+);
+
 router.get(
     "/",
     isAuthenicated, 

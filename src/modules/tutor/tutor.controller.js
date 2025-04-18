@@ -24,7 +24,7 @@ export const allTutors = asyncHandler(async (req,res,next)=>{
 //update tutor
 export const updateTutor = asyncHandler(async (req , res , next) =>{
     //check tutor in database
-    const tutor = await Tutor.findOne({id_by_organization : req.params.id})
+    const tutor = await Tutor.findById(req.params.id)
     if(!tutor) return next(new Error("tutor not found" , {cause: 404}))
     console.log(tutor);
     
@@ -41,12 +41,12 @@ export const updateTutor = asyncHandler(async (req , res , next) =>{
 
 //find one tutor
 export const getTutor = asyncHandler(async (req,res,next)=>{
-    const tutor = await Tutor.findOne({id_by_organization : req.params.id})
+    const tutor = await Tutor.findById( req.params.id)
     if(!tutor) return next(new Error("Tutor not found" , {cause: 404}))
     return res.json({success : true , tutor})
 })
 
-//find one tutor
+//find  tutor by NID
 export const getTutorByNID = asyncHandler(async (req,res,next)=>{
     const tutor = await Tutor.findOne({national_id : req.params.id})
     if(!tutor) return next(new Error("Tutor not found" , {cause: 404}))
@@ -56,7 +56,7 @@ export const getTutorByNID = asyncHandler(async (req,res,next)=>{
 //delete Tutor
 export const deleteTutor = asyncHandler(async (req , res , next) =>{
     //check Tutor in database
-    const tutor = await Tutor.findOne({id_by_organization : req.params.id})
+    const tutor = await Tutor.findById(req.params.id)
     if(!tutor) return next(new Error("Tutor not found" , {cause: 404}))
     await Tutor.findByIdAndDelete(tutor._id)
     //send response

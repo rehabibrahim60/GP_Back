@@ -17,7 +17,7 @@ export const addPdf = asyncHandler(async (req, res, next) => {
     });
 
     // Create PDF record in DB
-    await Pdf.create({
+    const pdf = await Pdf.create({
         title: req.body.title,
         grade: req.body.grade,
         lesson: req.body.lesson,
@@ -25,7 +25,7 @@ export const addPdf = asyncHandler(async (req, res, next) => {
         file: { id: public_id, url: secure_url },
     });
 
-    return res.json({ success: true, message: "PDF added successfully" });
+    return res.json({ success: true, message: "PDF added successfully" , pdf });
 });
 
 // Get all PDFs

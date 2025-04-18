@@ -36,25 +36,19 @@
 // };
 
 
-import multer, { diskStorage } from "multer"
+import multer, { diskStorage } from "multer";
 
-export const fileUpload = ()=>{
-    const fileFilter = (req,file,cb) =>{
-        if(![
-            "image/png", "image/jpeg", // Images
-            "video/mkv" , "video/mp4", "video/mov", "video/avi",  // Videos
-            "application/pdf", // PDFs
-            "application/msword", // DOC
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // DOCX
-            "application/vnd.ms-powerpoint", // PPT
-            "application/vnd.openxmlformats-officedocument.presentationml.presentation" // PPTX
-        ].includes(file.mimetype))
-            return cb(new Error("invalid format"),false)
-        return cb(null , true)
-    }
+export const fileUpload = (allowedTypes = []) => {
+    const fileFilter = (req, file, cb) => {
+        if (!allowedTypes.includes(file.mimetype)) {
+            return cb(new Error("Invalid file format"), false);
+        }
+        return cb(null, true);
+    };
 
-    return multer({storage : diskStorage({}), fileFilter})
-}
+    return multer({ storage: diskStorage({}), fileFilter });
+};
+
 
 
 

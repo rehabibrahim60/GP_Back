@@ -12,7 +12,9 @@ const router = Router();
 router.post(
     "/",
     isAuthenicated,
-    fileUpload().single("file"),
+    fileUpload([
+        "application/pdf"
+    ]).single("file"),
     validation(pdfSchema.addPdf),
     pdfController.addPdf
 );
