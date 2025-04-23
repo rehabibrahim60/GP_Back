@@ -11,7 +11,7 @@ export const createTutorFlag = asyncHandler(async (req, res, next) => {
 });
 
 export const getTutorFlags = asyncHandler(async (req, res , next) => {
-    const tutorFlags = await TutorFlag.find().populate("session_id flag_id");
+    const tutorFlags = await TutorFlag.find().populate("flag_id")
     res.status(200).json({success : true,tutorFlags});
 });
 

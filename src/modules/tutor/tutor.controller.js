@@ -3,7 +3,15 @@ import {Tutor} from "../../../DB/models/tutor.js"
 
 //add tutor
 export const addTutor = asyncHandler(async (req,res,next)=>{
-    
+    const tutor = await Tutor.findOne({
+        $or: [
+            { national_id: req.body.national_id },
+            { id_by_organization: req.body.id_by_organization }
+            ]
+        })
+    if(tutor) {
+        return next(new Error("Tutor already exists!", { cause: 409 }));
+    }
     //add tutor in db
     await Tutor.create({
         id_by_organization : req.body.id_by_organization,
@@ -39,6 +47,18 @@ export const updateTutor = asyncHandler(async (req , res , next) =>{
     return res.json({success: true , message: "Tutor updated successfully"})
 })
 
+
+//delete Tutor
+export const deleteTutor = asyncHandler(async (req , res , next) =>{
+    //check Tutor in database
+    const tutor = await Tutor.findById(req.params.id)
+    if(!tutor) return next(new Error("Tutor not found" , {cause: 404}))
+    await Tutor.findByIdAndDelete(tutor._id)
+    //send response
+    return res.json({success: true , message: "Tutor deleted successfully"})
+})
+
+
 //find one tutor
 export const getTutor = asyncHandler(async (req,res,next)=>{
     const tutor = await Tutor.findById( req.params.id)
@@ -53,15 +73,7 @@ export const getTutorByNID = asyncHandler(async (req,res,next)=>{
     return res.json({success : true , tutor})
 })
 
-//delete Tutor
-export const deleteTutor = asyncHandler(async (req , res , next) =>{
-    //check Tutor in database
-    const tutor = await Tutor.findById(req.params.id)
-    if(!tutor) return next(new Error("Tutor not found" , {cause: 404}))
-    await Tutor.findByIdAndDelete(tutor._id)
-    //send response
-    return res.json({success: true , message: "Tutor deleted successfully"})
-})
+
 
 
 

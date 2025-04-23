@@ -40,7 +40,7 @@ router.get(
 )
 
 //update tutor 
-router.put(
+router.patch(
     "/:id" ,
     isAuthenicated,
     isAuthorized("admin"),
