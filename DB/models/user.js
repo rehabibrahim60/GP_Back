@@ -4,7 +4,7 @@ const userSchema = new Schema({
     id_by_organization :{
         type : String , 
         required : true , 
-        min : 6
+        unique : true
     },
     name :{
         type : String ,

@@ -12,9 +12,14 @@ export const addUser = asyncHandler(async(req , res , next)=>{
     const {email  , password} = req.body;
 
     //check user existence
-    const user = await User.findOne({email})
+    const user = await User.findOne({
+        $or: [
+            { email: req.body.email},
+            { id_by_organization: req.body.id_by_organization }
+            ]
+        })
     if(user){
-        return next(new Error("this email already exist" , {cause : 409}))
+        return next(new Error("this user already exist" , {cause : 409}))
     }
 
     //hash password 
@@ -66,7 +71,7 @@ export const deleteUser = asyncHandler(async (req , res , next) =>{
 //update user
 export const updateUser = asyncHandler(async (req , res , next) =>{
     //check user in database
-    const user = await User.findOne({id_by_organization : req.params.id})
+    const user = await User.findById(req.params.id)
     if(!user) return next(new Error("user not found" , {cause: 404}))
     
     //update user
@@ -78,13 +83,13 @@ export const updateUser = asyncHandler(async (req , res , next) =>{
     //save user
     await user.save()
     //send response
-    return res.json({success: true , message: "user updated successfully"})
+    return res.json({success: true , message: "user updated successfully" , user})
 })
 
 
 //find one user
 export const getUser = asyncHandler(async (req,res,next)=>{
-    const user = await User.findOne({id_by_organization : req.params.id})
+    const user = await User.findById(req.params.id)
     if(!user) return next(new Error("User not found" , {cause: 404}))
     return res.json({success : true , user})
 })
