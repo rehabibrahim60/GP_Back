@@ -128,6 +128,24 @@ export const updateSession = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success:true ,message: "Session updated successfully", session });
 });
 
+export const updateStatus = asyncHandler(async (req, res, next) =>{
+    
+        const sessionId = req.params.id;
+        const { status } = req.body;
+    
+        const updated = await Session.findByIdAndUpdate(
+            sessionId,
+            { status },
+            { new: true }
+        );
+        
+        if (!updated) return next(new Error("Session not found", { cause: 404 }));
+        
+        return res.json({ success: true, session: updated });
+        
+        
+})
+
 // Delete Session
 export const deleteSession = asyncHandler(async (req, res, next) => {
     const session = await Session.findById(req.params.id);
@@ -151,7 +169,7 @@ export const searchSessions = asyncHandler(async (req, res, next) => {
     const sessions = await Session.find({
         $or: [
             { title: { $regex: query, $options: "i" } }, // Case-insensitive search
-            { lesson: { $regex: query, $options: "i" } }
+            { status: { $regex: query, $options: "i" } }
         ]
     });
 

@@ -24,19 +24,33 @@ router.get(
     isAuthenicated, 
     sessionController.getAllSessions
 ); // Get all sessions
+
+
 router.get(
     "/:id",
     isAuthenicated,
     validation(sessionSchema.idSchema) , 
     sessionController.getSessionById
 ); // Get session by ID
+
+
 router.patch(
     "/:id",
     isAuthenicated, 
     fileUpload().single("video"),
     validation(sessionSchema.updateSession), 
     sessionController.updateSession
-); // Update session
+);// Update session
+
+
+router.patch(
+    "/:id/status",
+    isAuthenicated, 
+    isAuthorized("quality_member"),
+    validation(sessionSchema.updateStatus), 
+    sessionController.updateStatus
+);// Update status
+
 router.delete(
     "/:id",
     isAuthenicated, 
@@ -47,7 +61,7 @@ router.get(
     "/search",
     isAuthenicated, 
     sessionController.searchSessions
-); // Search sessions by title/lesson
+); // Search sessions by status
 router.get(
     "/tutor/:id",
     isAuthenicated, 

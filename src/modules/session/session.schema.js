@@ -29,6 +29,11 @@ export const updateSession = Joi.object({
     status: Joi.string().valid("pending", "inprogress" ,"done").optional(),
 });
 
+export const updateStatus = Joi.object({
+    id: Joi.string().custom(isValidObjectId).required(),
+    status: Joi.string().valid("pending", "inprogress" ,"done").required(),
+});
+
 //used in get session by id && delete session
 export const idSchema = Joi.object({
     id: Joi.string().custom(isValidObjectId).required(),
