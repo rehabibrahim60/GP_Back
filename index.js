@@ -9,6 +9,8 @@ import tutorFlagRouter from "./src/modules/tutorFlag/tutorFlag.router.js"
 import sessionRouter from "./src/modules/session/session.router.js"
 import pdfRouter from "./src/modules/pdf/pdf.router.js"
 import reportRouter from "./src/modules/report/report.router.js"
+import notificationRouter from "./src/modules/notification/notification.router.js"
+import courseRouter from "./src/modules/course/course.router.js"
 import { v2 as cloudinary } from 'cloudinary';
 dotenv.config()
 
@@ -16,17 +18,26 @@ const app = express()
 const port = process.env.PORT
 app.timeout = 900000;
 
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'token'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 //parsing
 app.use(express.json())
 
 app.use(express.json({ limit: "100mb" }));  // Increase request size limit
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
+app.use((req, res, next) => {
+  console.log(`[TRACE] Incoming: ${req.method} ${req.url}`);
+  next();
+});
 
-app.use(cors({
-    origin: "*",  // Allow all origins (temporary for testing)
-    methods: "GET,POST,PUT,DELETE,PATCH",
-    allowedHeaders: "Content-Type,token"
-}));
 
 app.use((req, res, next) => {
   req.setTimeout(900000, () => {  // 10 minutes timeout
@@ -63,6 +74,8 @@ app.use("/tutorFlag" , tutorFlagRouter)
 app.use("/session", sessionRouter);
 app.use("/pdf", pdfRouter);
 app.use("/report", reportRouter);
+app.use("/notification", notificationRouter);
+app.use("/course", courseRouter);
 
 
 //connect db
