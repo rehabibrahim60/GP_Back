@@ -9,6 +9,10 @@ export const addPdf = asyncHandler(async (req, res, next) => {
     if (!req.file) {
         return next(new Error("PDF file is required!", { cause: 400 }));
     }
+    const isExist = await Pdf.findOne({title : req.body.title})
+    if (isExist) {
+        return next(new Error("PDF title is taken!", { cause: 409 }));
+    }
 
     // Upload PDF to Cloudinary
     const { public_id, secure_url } = await cloudinary.uploader.upload(req.file.path, {

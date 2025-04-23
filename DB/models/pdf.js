@@ -1,18 +1,20 @@
-import { model, Schema } from "mongoose";
+import { model, Schema , Types } from "mongoose";
 
 const pdfSchema = new Schema({
-    title : {
-        type : String , 
+    course_id : {
+        type : Types.ObjectId,
+        ref : "Course", 
         required : true , 
-        unique : true 
+
     },
     file : {
         id : {type : String , required : true},
         url : {type : String , required : true},
     },
-    grade: String , 
-    lesson : String , 
-    semester : String, 
+    lesson : {
+        type : String , 
+        required : true , 
+    },  
 
 },{timestamps : true})
 
