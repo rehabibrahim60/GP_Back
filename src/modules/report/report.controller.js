@@ -96,16 +96,25 @@ export const deleteReport = asyncHandler(async (req , res , next) =>{
 
 //update report
 export const updatereport = asyncHandler(async (req , res , next) =>{
+    console.log("🔧 PATCH /report/:id controller reached");
     //check report in database
     const report = await Report.findById(req.params.id)
     if(!report) return next(new Error("report not found" , {cause: 404}))
     console.log(report);
     
     //update report
-    report.name = req.body.name ? req.body.name : report.name
-    report.id_by_organization = req.body.id_by_organization ? req.body.id_by_organization : report.id_by_organization
-    report.phone = req.body.phone ? req.body.phone : report.phone
-    report.national_id = req.body.national_id ? req.body.national_id : report.national_id
+
+    report.session_id = req.body.session_id ? req.body.session_id : report.session_id ,
+    report.similarity = req.body.similarity ? req.body.similarity : report.similarity  ,
+    report.bad_word = req.body.bad_word ? req.body.bad_word : report.bad_word  ,
+    report.noisy_detection = req.body.noisy_detection ? req.body.noisy_detection : report.noisy_detection  ,
+    report.key_points = req.body.key_points ? req.body.key_points : report.key_points  ,
+    report.summary = req.body.summary ? req.body.summary : report.summary  ,
+    report.transcript = req.body.transcript ? req.body.transcript : report.transcript  ,
+    report.abnormal_times = req.body.abnormal_times ? req.body.abnormal_times : report.abnormal_times  ,
+    report.total_silence_duration = req.body.total_silence_duration ? req.body.total_silence_duration : report.total_silence_duration  ,
+    report.plot = req.body.image_base64? req.body.image_base64 : report.plot,
+    report.time_tracking = req.body.time_tracking ? req.body.time_tracking : report.time_tracking
     //save report
     await report.save()
     //send response

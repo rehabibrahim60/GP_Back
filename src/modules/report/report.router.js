@@ -46,7 +46,7 @@ router.get(
 
 
 //update report 
-router.put(
+router.patch(
     "/:id" ,
     isAuthenicated,
     validation(reportSchema.updateReport), 
@@ -57,7 +57,6 @@ router.put(
 router.delete(
     "/:id" ,
     isAuthenicated,
-    isAuthorized("admin"),
     validation(reportSchema.idSchema), 
     reportController.deleteReport
 )
