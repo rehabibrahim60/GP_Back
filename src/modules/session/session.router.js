@@ -75,4 +75,11 @@ router.get(
     sessionController.getSessionsByUserId
 ); // Get sessions by qm ID
 
+//download video 
+router.get(
+    "/:id/download", 
+    isAuthenicated,
+    validation(sessionSchema.idSchema),
+    sessionController.downloadVideo
+);
 export default router;

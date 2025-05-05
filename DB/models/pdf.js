@@ -11,10 +11,13 @@ const pdfSchema = new Schema({
         id : {type : String , required : true},
         url : {type : String , required : true},
     },
-    lesson : {
-        type : String , 
+    lesson_id : {
+        type : Types.ObjectId,
+        ref : "Lesson", 
         required : true , 
-    },  
+
+    },
+    
 
 },{timestamps : true})
 

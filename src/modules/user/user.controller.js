@@ -58,7 +58,7 @@ export const login = asyncHandler(async (req,res,next)=>{
 //delete user
 export const deleteUser = asyncHandler(async (req , res , next) =>{
     //check user in database
-    const user = await User.findOne({id_by_organization : req.params.id})
+    const user = await User.findById(req.params.id)
     if(!user) return next(new Error("user not found" , {cause: 404}))
     //make his token not valid
     await Token.updateMany({user : user._id},{isValid : false})

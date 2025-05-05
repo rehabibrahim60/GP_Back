@@ -34,7 +34,7 @@ export const addPdf = asyncHandler(async (req, res, next) => {
 
 // Get all PDFs
 export const allPdfs = asyncHandler(async (req, res, next) => {
-    const pdfs = await Pdf.find();
+    const pdfs = await Pdf.find().populate("course_id");
     return res.json({ success: true, pdfs });
 });
 
@@ -69,7 +69,7 @@ export const updatePdf = asyncHandler(async (req, res, next) => {
 
 // Get a single PDF by ID
 export const getPdf = asyncHandler(async (req, res, next) => {
-    const pdf = await Pdf.findById(req.params.id);
+    const pdf = await Pdf.findById(req.params.id).populate("course_id");
     if (!pdf) return next(new Error("PDF not found", { cause: 404 }));
 
     return res.json({ success: true, pdf });

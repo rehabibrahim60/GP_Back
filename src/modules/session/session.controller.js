@@ -1,57 +1,11 @@
-import { log } from "console";
+import axios from "axios";
 import { Session } from "../../../DB/models/session.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import cloudinary from "../../utils/cloud.js";
 
-// // Create Session with Video Upload
-// export const createSession = asyncHandler(async (req, res, next) => {
-//     // Check if file is provided
-//     console.log("📂 File Uploaded:", req.file);
-//     console.log("📄 Request Body:", req.body);
-
-//     if (!req.file) {
-//         return next(new Error("Video file is required!", { cause: 400 }));
-//     }
-    
-    
-
-//     // Upload Video to Cloudinary
-//     try {
-//         console.log("⏳ Uploading video to Cloudinary...");
-    
-//         const { public_id, secure_url } = await cloudinary.uploader.upload(req.file.path, {
-//             folder: `${process.env.CLOUD_FOLDER_NAME}/videos`,
-//             resource_type: "auto",
-//             timeout: 60000
-//         });
-    
-//         console.log("✅ Cloudinary upload successful:", secure_url);
-//     } catch (error) {
-//         console.error("❌ Cloudinary Upload Error:", error);
-//         return next(new Error("Cloudinary upload failed", { cause: 500 }));
-//     }
-    
-
-//     // Create session record in DB
-//     console.time("DB Save");
-//     const newSession = await Session.createIndexes({
-//         title: req.body.title,
-//         tutor_id: req.body.tutor_id,
-//         assigned_to: req.body.assigned_to,
-//         lesson: req.body.lesson,
-//         video: { id: public_id, url: secure_url },
-//     });
-//     console.timeEnd("DB Save");
-//     clearTimeout(timeout); // Clear timeout if DB operation is fast
-
-//     console.log("✅ Session created:", newSession);
-
-//     res.status(201).json({ message: "Session created successfully", session: newSession });
-// });
 
 
-
-// Add a new PDF
+// Add a new session
 export const createSession = asyncHandler(async (req, res, next) => {
     // Check if file is provided
     console.log("file1 " , req.file);
@@ -60,18 +14,18 @@ export const createSession = asyncHandler(async (req, res, next) => {
         return next(new Error("video file is required!", { cause: 400 }));
     }
     console.log("file2 " , req.file);
-    // Upload PDF to Cloudinary
+    // Upload session to Cloudinary
     const { public_id, secure_url } = await cloudinary.uploader.upload(req.file.path, {
         folder: `${process.env.CLOUD_FOLDER_NAME}/sessions`,
         resource_type: "video", // Ensures Cloudinary treats it as a document
     });
     console.log("file after uploading " , req.file);
-    // Create PDF record in DB
+    // Create session record in DB
     const session = await Session.create({
         title: req.body.title,
         tutor_id: req.body.tutor_id,
         assigned_to: req.body.assigned_to,
-        pdf_id : req.body.pdf_id,
+        session_id : req.body.session_id,
         lesson: req.body.lesson,
         date:req.body.date,
         video: { id: public_id, url: secure_url },
@@ -85,13 +39,13 @@ export const createSession = asyncHandler(async (req, res, next) => {
 
 // Get All Sessions
 export const getAllSessions = asyncHandler(async (req, res, next) => {
-    const sessions = await Session.find().populate("tutor_id assigned_to pdf_id");
+    const sessions = await Session.find().populate("tutor_id assigned_to");
     res.status(200).json({success :true ,sessions});
 });
 
 // Get Single Session by ID
 export const getSessionById = asyncHandler(async (req, res, next) => {
-    const session = await Session.findById(req.params.id).populate("tutor_id assigned_to pdf_id");
+    const session = await Session.findById(req.params.id).populate("tutor_id assigned_to");
     if (!session) return next(new Error("Session not found", { cause: 404 }));
 
     res.status(200).json({success:true,message:"fetched successfuly" ,session});
@@ -197,3 +151,23 @@ export const getSessionsByUserId = asyncHandler(async (req, res, next) => {
 
     res.status(200).json({success: true,sessions});
 });
+
+//download video 
+export const downloadVideo = asyncHandler(async (req, res, next) => {
+    const session = await Session.findById(req.params.id);
+    if (!session) return next(new Error("session not found", { cause: 404 }));
+  
+    const sessionUrl = session.video.url;
+  
+    // Use axios to get the file as stream
+    const response = await axios.get(sessionUrl, {
+      responseType: "stream",
+    });
+  
+    // Set headers to simulate file download
+    res.setHeader("Content-Disposition", `attachment; filename="${session.title}.mp4"`);
+    res.setHeader("Content-Type", "application/mp4");
+  
+    // Pipe the stream directly to response
+    response.data.pipe(res);
+  });
