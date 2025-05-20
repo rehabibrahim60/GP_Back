@@ -2,18 +2,19 @@ import axios from "axios";
 import { Session } from "../../../DB/models/session.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import cloudinary from "../../utils/cloud.js";
+import { Notification } from "../../../DB/models/notification.js";
 
 
 
 // Add a new session
 export const createSession = asyncHandler(async (req, res, next) => {
+    //check if title is exist
+    const session_title = await Session.findOne({title : req.body.title}) 
+    if(session_title) return next(new Error("this title is already exist", { cause: 400 }))
     // Check if file is provided
-    console.log("file1 " , req.file);
-    
     if (!req.file) {
         return next(new Error("video file is required!", { cause: 400 }));
     }
-    console.log("file2 " , req.file);
     // Upload session to Cloudinary
     const { public_id, secure_url } = await cloudinary.uploader.upload(req.file.path, {
         folder: `${process.env.CLOUD_FOLDER_NAME}/sessions`,
@@ -27,10 +28,15 @@ export const createSession = asyncHandler(async (req, res, next) => {
         assigned_to: req.body.assigned_to,
         session_id : req.body.session_id,
         lesson: req.body.lesson,
+        pdf_id :req.body.pdf_id,
         date:req.body.date,
         video: { id: public_id, url: secure_url },
     });
-    console.log(session);
+    //send notification to qm 
+    const notification = await Notification.create({
+        message : `session \"${session.title}\" assigned to you`,
+        user_id : session.assigned_to
+    })
     
     return res.json({ success: true, message: "session added successfully" , session });
 });

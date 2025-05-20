@@ -30,9 +30,9 @@ router.get(
     notificationController.getNotification
 )
 
-//get notification by NID
+//get notification by userID
 router.get(
-    "/nid/:id",
+    "/user/:id",
     isAuthenicated,
     validation(notificationSchema.idSchema) , 
     notificationController.getNotificationByUser

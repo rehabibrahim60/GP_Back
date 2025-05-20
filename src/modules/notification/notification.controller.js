@@ -55,9 +55,9 @@ export const getNotification = asyncHandler(async (req,res,next)=>{
 
 //find  notification by user id
 export const getNotificationByUser = asyncHandler(async (req,res,next)=>{
-    const notification = await Notification.findOne({user_id : req.params.id})
-    if(!notification) return next(new Error("notification not found" , {cause: 404}))
-    return res.json({success : true , notification})
+    const notifications = await Notification.find({user_id : req.params.id})
+    // if(!notifications) return next(new Error("notifications not found" , {cause: 404}))
+    return res.json({success : true , notifications})
 })
 
 

@@ -1,5 +1,6 @@
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import {Course} from "../../../DB/models/course.js"
+import { Lesson } from "../../../DB/models/lesson.js";
 
 //add course
 export const addCourse = asyncHandler(async (req,res,next)=>{
@@ -12,6 +13,14 @@ export const addCourse = asyncHandler(async (req,res,next)=>{
         title : req.body.title,
         num_of_lessons : req.body.num_of_lessons,
     })
+    //add course lessons to db
+    for (let i = 1; i < req.body.num_of_lessons+1; i++) {
+        const lesson = await Lesson.create({
+            course_id: course._id,
+            lesson: i
+        })
+        
+    }
     //response
     return res.json({success : true , message : "course added successfuly" , course})
 })

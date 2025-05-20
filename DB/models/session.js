@@ -2,7 +2,8 @@ import { model, Schema, Types } from "mongoose";
 
 const sessionSchema = new Schema({
     title :{
-        type : String
+        type : String,
+        required : true
     } ,
     tutor_id : {
         type : Types.ObjectId,

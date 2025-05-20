@@ -5,7 +5,6 @@ const pdfSchema = new Schema({
         type : Types.ObjectId,
         ref : "Course", 
         required : true , 
-
     },
     file : {
         id : {type : String , required : true},
@@ -15,7 +14,6 @@ const pdfSchema = new Schema({
         type : Types.ObjectId,
         ref : "Lesson", 
         required : true , 
-
     },
     
 
