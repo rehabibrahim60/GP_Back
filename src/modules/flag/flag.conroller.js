@@ -1,5 +1,6 @@
 import { Flag } from "../../../DB/models/flag.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
+import { logActivity } from "../../utils/logActivity.js";
 
 
 export const createFlag = asyncHandler(async (req, res , next) => {
@@ -8,6 +9,15 @@ export const createFlag = asyncHandler(async (req, res , next) => {
     flag = await Flag.create({
         flag_name : req.body.flag_name
     });
+
+    // Log activity
+    await logActivity({
+      userId: req.user.id, // assuming you have auth middleware
+      action: 'create a new Flag',
+      entityType: 'Course',
+      entityId: flag._id,
+    });
+
     res.status(201).json({success : true , message: "Flag created successfully", flag });
 });
 
@@ -29,6 +39,14 @@ export const updateFlag = asyncHandler(async (req, res , next) => {
     if (!flag) {
         return next(new Error("Flag not found" , {cause: 404})) 
     }
+
+    // Log activity
+        await logActivity({
+          userId: req.user.id, // assuming you have auth middleware
+          action: 'Update Flag data',
+          entityType: 'Flag',
+          entityId: flag._id,
+        });
     res.status(200).json({success:true , message: "Flag updated successfully", flag });
 });
 
@@ -37,6 +55,13 @@ export const deleteFlag = asyncHandler(async (req, res , next ) => {
     if (!flag) {
         return next(new Error("Flag not found" , {cause: 404})) 
     }
+    // Log activity
+    await logActivity({
+      userId: req.user.id, // assuming you have auth middleware
+      action: 'delete Flag',
+      entityType: 'Flag',
+      entityId: flag._id,
+    });
     res.status(200).json({success: true , message: "Flag deleted successfully" });
 });
 

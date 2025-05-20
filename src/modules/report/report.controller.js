@@ -62,10 +62,14 @@ export const addReport = asyncHandler(async (req,res,next)=>{
     })
     
     
+    // Log activity
+        await logActivity({
+          userId: req.user.id, // assuming you have auth middleware
+          action: 'create a new system Report',
+          entityType: 'Report',
+          entityId: report._id,
+        });
 
-
-
-    
     //response
     return     res.status(200).json({ message: 'Report saved', report , plot : data.image_base64});
 })
@@ -90,6 +94,15 @@ export const deleteReport = asyncHandler(async (req , res , next) =>{
     const report = await Report.findById(req.params.id)
     if(!report) return next(new Error("report not found" , {cause: 404}))
     await Report.findByIdAndDelete(report._id)
+    
+    // Log activity
+        await logActivity({
+          userId: req.user.id, // assuming you have auth middleware
+          action: 'delete system Report',
+          entityType: 'Report',
+          entityId: report._id,
+        });
+    
     //send response
     return res.json({success: true , message: "report deleted successfully"})
 })
@@ -117,6 +130,15 @@ export const updatereport = asyncHandler(async (req , res , next) =>{
     report.time_tracking = req.body.time_tracking ? req.body.time_tracking : report.time_tracking
     //save report
     await report.save()
+    
+    // Log activity
+        await logActivity({
+          userId: req.user.id, // assuming you have auth middleware
+          action: 'Update system Report',
+          entityType: 'Report',
+          entityId: report._id,
+        });
+    
     //send response
     return res.json({success: true , message: "report updated successfully"})
 })

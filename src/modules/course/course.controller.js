@@ -1,6 +1,7 @@
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import {Course} from "../../../DB/models/course.js"
 import { Lesson } from "../../../DB/models/lesson.js";
+import { logActivity } from "../../utils/logActivity.js";
 
 //add course
 export const addCourse = asyncHandler(async (req,res,next)=>{
@@ -21,6 +22,13 @@ export const addCourse = asyncHandler(async (req,res,next)=>{
         })
         
     }
+    // Log activity
+    await logActivity({
+      userId: req.user.id, // assuming you have auth middleware
+      action: 'Create a new Course',
+      entityType: 'Course',
+      entityId: course._id,
+    });
     //response
     return res.json({success : true , message : "course added successfuly" , course})
 })
@@ -42,6 +50,13 @@ export const updateCourse = asyncHandler(async (req , res , next) =>{
     course.title = req.body.title ? req.body.title : course.title
     //save course
     await course.save()
+    // Log activity
+    await logActivity({
+      userId: req.user.id, // assuming you have auth middleware
+      action: 'Update Course data',
+      entityType: 'Course',
+      entityId: course._id,
+    });
     //send response
     return res.json({success: true , message: "course updated successfully"})
 })
@@ -53,6 +68,13 @@ export const deleteCourse = asyncHandler(async (req , res , next) =>{
     const course = await Course.findById(req.params.id)
     if(!course) return next(new Error("course not found" , {cause: 404}))
     await course.findByIdAndDelete(course._id)
+    // Log activity
+    await logActivity({
+      userId: req.user.id, // assuming you have auth middleware
+      action: 'Delete Course',
+      entityType: 'Course',
+      entityId: course._id,
+    });
     //send response
     return res.json({success: true , message: "course deleted successfully"})
 })

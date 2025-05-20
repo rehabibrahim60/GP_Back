@@ -7,6 +7,13 @@ export const createTutorFlag = asyncHandler(async (req, res, next) => {
         flag_id : req.body.flag_id,
         comment : req.body.comment,
     });
+    // Log activity
+    await logActivity({
+        userId: req.user.id, // assuming you have auth middleware
+        action: 'Assign Flag to Tutor',
+        entityType: 'Tutor Flag',
+        entityId: tutorFlag._id,
+    });
     res.status(201).json({success: true , message: "TutorFlag created successfully", tutorFlag });
 });
 
@@ -36,6 +43,13 @@ export const deleteTutorFlag = asyncHandler(async (req, res) => {
     if (!tutorFlag) {
         return next(new Error("Tutor Flag not found" , {cause: 404})) 
     }
+    // Log activity
+    await logActivity({
+        userId: req.user.id, // assuming you have auth middleware
+        action: 'delete Tutor Flag',
+        entityType: 'Tutor Flag',
+        entityId: tutorFlag._id,
+    });
     res.status(200).json({success:true , message: "TutorFlag deleted successfully" });
 });
 

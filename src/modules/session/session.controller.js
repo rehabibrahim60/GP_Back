@@ -37,6 +37,14 @@ export const createSession = asyncHandler(async (req, res, next) => {
         message : `session \"${session.title}\" assigned to you`,
         user_id : session.assigned_to
     })
+
+    // Log activity
+        await logActivity({
+          userId: req.user.id, // assuming you have auth middleware
+          action: 'Add a new Session',
+          entityType: 'Session',
+          entityId: Session._id,
+        });
     
     return res.json({ success: true, message: "session added successfully" , session });
 });
@@ -85,6 +93,14 @@ export const updateSession = asyncHandler(async (req, res, next) => {
     session.lesson = req.body.lesson ?? session.lesson;
 
     await session.save();
+
+    // Log activity
+        await logActivity({
+          userId: req.user.id, // assuming you have auth middleware
+          action: 'Update Session',
+          entityType: 'Session',
+          entityId: Session._id,
+        });
     res.status(200).json({ success:true ,message: "Session updated successfully", session });
 });
 
@@ -118,6 +134,14 @@ export const deleteSession = asyncHandler(async (req, res, next) => {
 
     // Delete session from DB
     await Session.findByIdAndDelete(req.params.id);
+
+    // Log activity
+        await logActivity({
+          userId: req.user.id, // assuming you have auth middleware
+          action: 'Delete Session',
+          entityType: 'Session',
+          entityId: Session._id,
+        });
 
     res.status(200).json({ message: "Session deleted successfully" });
 });

@@ -12,13 +12,13 @@ export const addUser = asyncHandler(async(req , res , next)=>{
     const {email  , password} = req.body;
 
     //check user existence
-    const user = await User.findOne({
+    const userExist = await User.findOne({
         $or: [
             { email: req.body.email},
             { id_by_organization: req.body.id_by_organization }
             ]
         })
-    if(user){
+    if(userExist){
         return next(new Error("this user already exist" , {cause : 409}))
     }
 
@@ -27,8 +27,15 @@ export const addUser = asyncHandler(async(req , res , next)=>{
     
 
     //craete user 
-    await User.create({...req.body , password:hashPassword})
+    const user = await User.create({...req.body , password:hashPassword})
 
+    // Log activity
+    await logActivity({
+        userId: req.user.id, // assuming you have auth middleware
+        action: 'Add a new Quality mamber',
+        entityType: 'User',
+        entityId: user._id,
+    });
 
     //send response 
     return res.status(201).json({success : true , message : "user added successfully" , name : req.body.name})
@@ -64,6 +71,13 @@ export const deleteUser = asyncHandler(async (req , res , next) =>{
     await Token.updateMany({user : user._id},{isValid : false})
     //delete user from db
     await User.findByIdAndDelete(user._id)
+        // Log activity
+    await logActivity({
+        userId: req.user.id, // assuming you have auth middleware
+        action: 'Delete Quality mamber',
+        entityType: 'User',
+        entityId: user._id,
+    });
     //send response
     return res.json({success: true , message: "user deleted successfully"})
 })
@@ -82,6 +96,13 @@ export const updateUser = asyncHandler(async (req , res , next) =>{
     user.password = req.body.password ? req.body.password : user.password
     //save user
     await user.save()
+        // Log activity
+    await logActivity({
+        userId: req.user.id, // assuming you have auth middleware
+        action: 'Update Quality mamber info',
+        entityType: 'User',
+        entityId: user._id,
+    });
     //send response
     return res.json({success: true , message: "user updated successfully" , user})
 })
