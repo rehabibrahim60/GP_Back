@@ -19,17 +19,20 @@ export const allNotifications = asyncHandler(async (req,res,next)=>{
     return res.json({success : true , notifications})
 })
 
+//get unread notifications
+export const unReadNotifications = asyncHandler(async (req,res,next)=>{
+    const notifications = await Notification.find({isRead : false})
+    return res.json({success : true , notifications})
+})
+
 //update notification
 export const updateNotification = asyncHandler(async (req , res , next) =>{
     //check notification in database
-    const notification = await Notification.findById(req.params.id)
-    if(!notification) return next(new Error("notification not found" , {cause: 404}))
-    
-    //update notification
-    notification.message = req.body.message ? req.body.message : notification.message
-    notification.user_id = req.body.user_id ? req.body.user_id : notification.user_id
-    //save notification
-    await notification.save()
+
+    await Notification.updateMany(
+        { user_id: req.params.id, isRead: false },
+        { $set: { isRead: true } }
+    );
     //send response
     return res.json({success: true , message: "notification updated successfully"})
 })

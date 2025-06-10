@@ -16,7 +16,7 @@ router.post(
     '/',
     isAuthenicated,
     upload.fields([{ name: 'video' }, { name: 'pdf' }]),
-    validation(reportSchema.createReport) , 
+    // validation(reportSchema.createReport) , 
     reportController.addReport 
 )
 
@@ -60,5 +60,19 @@ router.delete(
     validation(reportSchema.idSchema), 
     reportController.deleteReport
 )
+
+//get report ==> tutor-friendly version 
+router.get(
+    "/:id/tutor-view", 
+    validation(reportSchema.idSchema),
+    reportController.getTutorReport
+);
+
+//get all reports per tutor  
+router.get(
+    "/tutor/:id", 
+    validation(reportSchema.idSchema),
+    reportController.allReportsPerTutor
+);
 
 export default router

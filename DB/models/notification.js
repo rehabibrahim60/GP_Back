@@ -10,6 +10,10 @@ const notificationSchema = new Schema({
         type : String,
         required : true
     },
+    isRead : {
+        type : Boolean,
+        default : false,
+    }
 },{timestamps : true})
 
 export const Notification = model("Notification" , notificationSchema)

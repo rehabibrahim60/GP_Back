@@ -7,13 +7,7 @@ export const addNotification = Joi.object({
     message : Joi.string().required(),
 }).required()
 
-//update Notification
-export const updateNotification = Joi.object({
-    id: Joi.string().required(),
-    user_id : Joi.string().custom(isValidObjectId),
-    message : Joi.string(),
 
-}).required()
 
 //Get one Notification
 export const idSchema = Joi.object({

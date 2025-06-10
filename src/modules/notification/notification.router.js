@@ -22,6 +22,13 @@ router.get(
     notificationController.allNotifications
 )
 
+//get unRead notifications 
+router.get(
+    "/unread",
+    isAuthenicated, 
+    notificationController.unReadNotifications
+)
+
 //get one notification
 router.get(
     "/:id",
@@ -42,7 +49,7 @@ router.get(
 router.patch(
     "/:id" ,
     isAuthenicated,
-    validation(notificationSchema.updateNotification), 
+    validation(notificationSchema.idSchema), 
     notificationController.updateNotification)
 
 //delete notification 

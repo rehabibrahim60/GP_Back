@@ -2,6 +2,7 @@ import { asyncHandler } from "../../utils/asyncHandler.js";
 import cloudinary from "../../utils/cloud.js";
 import { Pdf } from "../../../DB/models/pdf.js";
 import axios from "axios";
+import { Course } from "../../../DB/models/course.js";
 
 // Add a new PDF
 export const addPdf = asyncHandler(async (req, res, next) => {
@@ -9,10 +10,15 @@ export const addPdf = asyncHandler(async (req, res, next) => {
     if (!req.file) {
         return next(new Error("PDF file is required!", { cause: 400 }));
     }
-    const isExist = await Pdf.findOne({title : req.body.title})
-    if (isExist) {
-        return next(new Error("PDF title is taken!", { cause: 409 }));
+    const course = await Course.findById(req.body.course_id)
+    const num_of_pdfs = await Pdf.countDocuments({course_id : req.body.course_id})
+    const lessonpdf = await Pdf.find({lesson_id : req.body.lesson_id})
+
+    if(lessonpdf.length > 0 ) return next(new Error("lesson already has a pdf", { cause: 409 }));
+    if (num_of_pdfs >= course.num_of_lessons) {
+        return next(new Error("All course lessons have  pdfs", { cause: 409 }));
     }
+
 
     // Upload PDF to Cloudinary
     const { public_id, secure_url } = await cloudinary.uploader.upload(req.file.path, {
@@ -22,10 +28,9 @@ export const addPdf = asyncHandler(async (req, res, next) => {
 
     // Create PDF record in DB
     const pdf = await Pdf.create({
-        title: req.body.title,
-        grade: req.body.grade,
-        lesson: req.body.lesson,
-        semester: req.body.semester,
+        title : req.body.title ? req.body.title : req.body.lesson_id ,
+        course_id: req.body.course_id,
+        lesson_id: req.body.lesson_id,
         file: { id: public_id, url: secure_url },
     });
 

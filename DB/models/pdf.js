@@ -6,6 +6,10 @@ const pdfSchema = new Schema({
         ref : "Course", 
         required : true , 
     },
+    title : {
+        type : String, 
+        // required : true , 
+    },
     file : {
         id : {type : String , required : true},
         url : {type : String , required : true},

@@ -9,7 +9,6 @@ const tutorFlagSchema = new Schema({
     flag_id : {
         type : Types.ObjectId,
         ref : "Flag",
-        required : true,
     },
     comment : {
         type : String,

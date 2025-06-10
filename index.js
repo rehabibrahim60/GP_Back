@@ -11,6 +11,7 @@ import pdfRouter from "./src/modules/pdf/pdf.router.js"
 import reportRouter from "./src/modules/report/report.router.js"
 import notificationRouter from "./src/modules/notification/notification.router.js"
 import courseRouter from "./src/modules/course/course.router.js"
+import dashboardRouter from "./src/modules/dashboard/dashboard.router.js"
 import { v2 as cloudinary } from 'cloudinary';
 dotenv.config()
 
@@ -76,6 +77,7 @@ app.use("/pdf", pdfRouter);
 app.use("/report", reportRouter);
 app.use("/notification", notificationRouter);
 app.use("/course", courseRouter);
+app.use("/dashboard", dashboardRouter)
 
 
 //connect db

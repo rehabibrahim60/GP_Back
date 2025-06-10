@@ -94,6 +94,13 @@ export const getCourseByTitle = asyncHandler(async (req,res,next)=>{
     return res.json({success : true , course})
 })
 
+//find  course by user id
+export const getCourseLessons = asyncHandler(async (req,res,next)=>{
+    const lessons = await Lesson.find({course_id : req.params.id})
+    if(!lessons) return next(new Error("no lessons" , {cause: 404}))
+    return res.json({success : true , lessons})
+})
+
 
 
 

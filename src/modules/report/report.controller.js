@@ -6,6 +6,9 @@ import FormData from 'form-data';
 import axios from 'axios';
 import multer from "multer";
 import { Pdf } from "../../../DB/models/pdf.js";
+import { TutorFlag } from "../../../DB/models/tutorFlag.js";
+import { logActivity } from "../../utils/logActivity.js";
+import { Types } from "mongoose";
 
 
 //add report
@@ -28,7 +31,7 @@ export const addReport = asyncHandler(async (req,res,next)=>{
 
     
         const response = await axios.post(
-            'https://37a5-34-169-122-84.ngrok-free.app/analyze-content',
+            'https://da05-34-13-192-25.ngrok-free.app/analyze-content',
             form,
             { headers: form.getHeaders() }
         );
@@ -128,6 +131,7 @@ export const updatereport = asyncHandler(async (req , res , next) =>{
     report.total_silence_duration = req.body.total_silence_duration ? req.body.total_silence_duration : report.total_silence_duration  ,
     report.plot = req.body.image_base64? req.body.image_base64 : report.plot,
     report.time_tracking = req.body.time_tracking ? req.body.time_tracking : report.time_tracking
+    report.comments = req.body.comments ? req.body.comments : report.comments
     //save report
     await report.save()
     
@@ -149,3 +153,91 @@ export const getreport = asyncHandler(async (req,res,next)=>{
     if(!report) return next(new Error("report not found" , {cause: 404}))
     return res.json({success : true , report})
 })
+
+//get report tutor-friendly version
+export const getTutorReport = asyncHandler ( async (req, res, next) => {
+
+    const report = await Report.findById(req.params.id);
+    if (!report) return next(new Error("report not found" , {cause: 404}))
+
+    
+
+    // Tutor-friendly fields
+    const similarityScore = report.similarity;
+    const badWords = report.bad_word.map(item => item.word);
+    const sessionQuietness = report.noisy_detection;
+    const toneOfVoice = report.abnormal_times.map((t) => 
+      `High voice between ${t.start_time} and ${t.end_time}`
+    );
+
+    // Silence duration logic
+    const silenceSeconds = report.total_silence_duration;
+
+    const tutorFlagsExist =await TutorFlag.find({session_id : report.session_id})
+    console.log(tutorFlagsExist);
+    
+
+    if (tutorFlagsExist.length == 0){
+        // Flag conditions
+        if (similarityScore < 80) {
+            TutorFlag.create({
+                session_id: report.session_id ,
+                comment: "Content coverage is low"
+            })
+        }
+        if (badWords.length >= 2) {
+            TutorFlag.create({
+                session_id: report.session_id ,
+                comment: "Too many inappropriate words"
+            })
+        }
+        if (report.abnormal_times.length > 2) {
+            TutorFlag.create({
+                session_id: report.session_id ,
+                comment: "Voice tone is High"
+            })
+        }
+        if (silenceSeconds > 5) {
+            TutorFlag.create({
+                session_id: report.session_id ,
+                comment: "Session had too much silence"
+            })
+        }
+    }
+    const flags =await TutorFlag.find({session_id : report.session_id})
+
+    res.json({
+        session_id: report.session_id,
+        similarityScore,
+        badWords,
+        sessionQuietness,
+        toneOfVoice,
+        totalSilenceDuration: report.total_silence_duration,
+        tutorFlags: flags,
+        comments: report.comments
+    });
+
+  
+})
+
+
+
+export const allReportsPerTutor = asyncHandler(async (req, res, next) => {
+console.log(req.params.tutorId);
+
+  const reports = await Report.find()
+    .populate({
+      path: "session_id",
+      match: { tutor_id: req.params.id },
+    });
+
+  // Filter out reports where session_id was null (i.e., no match)
+  const filteredReports = reports.filter(report => report.session_id !== null);
+  const ids = filteredReports.map(r=>r = r._id)
+
+  if (filteredReports.length == 0 ) {
+    return next(new Error("No reports found for this tutor", { cause: 404 }));
+  }
+
+  return res.json({ success: true, reports: ids });
+});

@@ -3,6 +3,8 @@ import { Session } from "../../../DB/models/session.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import cloudinary from "../../utils/cloud.js";
 import { Notification } from "../../../DB/models/notification.js";
+import { logActivity } from "../../utils/logActivity.js";
+
 
 
 

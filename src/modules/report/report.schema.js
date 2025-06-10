@@ -2,7 +2,7 @@ import Joi from "joi"
 import {isValidObjectId} from "../../middelware/validation.middleware.js"
 
 export const idSchema = Joi.object({
-    id: Joi.string().required(),
+    id: Joi.string().custom(isValidObjectId).required(),
 }).required()
 
 
@@ -18,7 +18,8 @@ export const updateReport = Joi.object({
     abnormal_times: Joi.array(),
     total_silence_duration : Joi.string(),
     plot: Joi.string(),
-    time_tracking: Joi.array()
+    time_tracking: Joi.array(),
+    comments : Joi.string()
 })
 
 

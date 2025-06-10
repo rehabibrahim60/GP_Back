@@ -33,6 +33,13 @@ router.get(
 
 //get course by NID
 router.get(
+    "/lesson/:id",
+    isAuthenicated,
+    validation(courseSchema.idSchema) , 
+    courseController.getCourseLessons
+)
+//get lessons by course
+router.get(
     "/nid/:id",
     isAuthenicated,
     validation(courseSchema.idSchema) , 
