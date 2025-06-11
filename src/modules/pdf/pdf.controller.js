@@ -10,36 +10,42 @@ export const addPdf = asyncHandler(async (req, res, next) => {
     if (!req.file) {
         return next(new Error("PDF file is required!", { cause: 400 }));
     }
+    console.log("11111");
+    
     const course = await Course.findById(req.body.course_id)
+    console.log("222");
     const num_of_pdfs = await Pdf.countDocuments({course_id : req.body.course_id})
+    console.log("333");
     const lessonpdf = await Pdf.find({lesson_id : req.body.lesson_id})
+    console.log("44444");
 
     if(lessonpdf.length > 0 ) return next(new Error("lesson already has a pdf", { cause: 409 }));
+    console.log("5555");
     if (num_of_pdfs >= course.num_of_lessons) {
         return next(new Error("All course lessons have  pdfs", { cause: 409 }));
     }
-
+console.log("6666");
 
     // Upload PDF to Cloudinary
     const { public_id, secure_url } = await cloudinary.uploader.upload(req.file.path, {
         folder: `${process.env.CLOUD_FOLDER_NAME}/pdfs`,
         resource_type: "raw", // Ensures Cloudinary treats it as a document
     });
-
+console.log("7777");
     // Create PDF record in DB
     const pdf = await Pdf.create({
-        title : req.body.title ? req.body.title : req.body.lesson_id ,
+        pdfTitle : req.body.pdfTitle ,
         course_id: req.body.course_id,
         lesson_id: req.body.lesson_id,
         file: { id: public_id, url: secure_url },
     });
-
+console.log("88888");
     return res.json({ success: true, message: "PDF added successfully" , pdf });
 });
 
 // Get all PDFs
 export const allPdfs = asyncHandler(async (req, res, next) => {
-    const pdfs = await Pdf.find().populate("course_id");
+    const pdfs = await Pdf.find().populate("course_id lesson_id");
     return res.json({ success: true, pdfs });
 });
 
@@ -63,7 +69,7 @@ export const updatePdf = asyncHandler(async (req, res, next) => {
     }
 
     // Update other fields
-    pdf.title = req.body.title ?? pdf.title;
+    pdf.pdfTitle = req.body.pdfTitle ?? pdf.pdfTitle;
     pdf.grade = req.body.grade ?? pdf.grade;
     pdf.lesson = req.body.lesson ?? pdf.lesson;
     pdf.semester = req.body.semester ?? pdf.semester;
@@ -74,7 +80,7 @@ export const updatePdf = asyncHandler(async (req, res, next) => {
 
 // Get a single PDF by ID
 export const getPdf = asyncHandler(async (req, res, next) => {
-    const pdf = await Pdf.findById(req.params.id).populate("course_id");
+    const pdf = await Pdf.findById(req.params.id).populate("course_id lesson_id")
     if (!pdf) return next(new Error("PDF not found", { cause: 404 }));
 
     return res.json({ success: true, pdf });
@@ -93,7 +99,7 @@ export const downloadPdf = asyncHandler(async (req, res, next) => {
     });
   
     // Set headers to simulate file download
-    res.setHeader("Content-Disposition", `attachment; filename="${pdf.title}.pdf"`);
+    res.setHeader("Content-Disposition", `attachment; filename="${pdf.pdfTitle}.pdf"`);
     res.setHeader("Content-Type", "application/pdf");
   
     // Pipe the stream directly to response

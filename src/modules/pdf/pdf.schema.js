@@ -2,7 +2,7 @@ import Joi from "joi";
 
 // Add New PDF Schema
 export const addPdf = Joi.object({
-    title : Joi.string(),
+    pdfTitle : Joi.string(),
     course_id: Joi.string().required(),
     lesson_id: Joi.string().required(),
 }).required();
@@ -10,7 +10,7 @@ export const addPdf = Joi.object({
 // Update PDF Schema
 export const updatePdf = Joi.object({
     id: Joi.string().required(),
-    title : Joi.string(),
+    pdfTitle : Joi.string(),
     course_id: Joi.string(),
     lesson_id: Joi.string(),
 }).required();

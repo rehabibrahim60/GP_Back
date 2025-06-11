@@ -1,9 +1,10 @@
+import mongoose from "mongoose";
 import { model, Schema, Types } from "mongoose";
 
 const reportSchema = new Schema({
     
     session_id :{
-        type :Types.ObjectId , 
+        type :mongoose.Schema.Types.ObjectId, 
         ref : "Session",
         required : true 
     },
@@ -49,10 +50,7 @@ const reportSchema = new Schema({
         start_frame : {type : String , required : true},
         end_frame : {type : String , required : true},
     }],
-    transcript : {
-        type : String,
-        required : true
-    },
+
     total_silence_duration: {type : String , required : true},
     plot: {type : String , required : true},
     comments: String ,  

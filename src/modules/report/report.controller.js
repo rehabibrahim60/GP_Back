@@ -9,6 +9,7 @@ import { Pdf } from "../../../DB/models/pdf.js";
 import { TutorFlag } from "../../../DB/models/tutorFlag.js";
 import { logActivity } from "../../utils/logActivity.js";
 import { Types } from "mongoose";
+import { Tutor } from "../../../DB/models/tutor.js";
 
 
 //add report
@@ -157,16 +158,24 @@ export const getreport = asyncHandler(async (req,res,next)=>{
 //get report tutor-friendly version
 export const getTutorReport = asyncHandler ( async (req, res, next) => {
 
-    const report = await Report.findById(req.params.id);
-    if (!report) return next(new Error("report not found" , {cause: 404}))
-
+    // const report = await Report.findById(req.params.id);
     
+    const report = await Report.findById(req.params.id)
+    if (!report) return next(new Error("report not found" , {cause: 404}))
+        console.log("report:" , report);
+        
+        
+    //get tutor data
+    const session = await Session.findById(report.session_id)
+    console.log("session",session);
+    
+    const tutor = await Tutor.findById(session.tutor_id)
 
     // Tutor-friendly fields
     const similarityScore = report.similarity;
-    const badWords = report.bad_word.map(item => item.word);
+    const badWords = report.bad_word?.map(item => item.word);
     const sessionQuietness = report.noisy_detection;
-    const toneOfVoice = report.abnormal_times.map((t) => 
+    const toneOfVoice = report.abnormal_times?.map((t) => 
       `High voice between ${t.start_time} and ${t.end_time}`
     );
 
@@ -214,7 +223,8 @@ export const getTutorReport = asyncHandler ( async (req, res, next) => {
         toneOfVoice,
         totalSilenceDuration: report.total_silence_duration,
         tutorFlags: flags,
-        comments: report.comments
+        comments: report.comments,
+        tutor
     });
 
   

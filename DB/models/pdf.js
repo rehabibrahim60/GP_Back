@@ -6,7 +6,7 @@ const pdfSchema = new Schema({
         ref : "Course", 
         required : true , 
     },
-    title : {
+    pdfTitle : {
         type : String, 
         // required : true , 
     },
