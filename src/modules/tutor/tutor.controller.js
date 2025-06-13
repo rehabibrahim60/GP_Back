@@ -1,5 +1,6 @@
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import {Tutor} from "../../../DB/models/tutor.js"
+import { logActivity } from "../../utils/logActivity.js";
 
 //add tutor
 export const addTutor = asyncHandler(async (req,res,next)=>{

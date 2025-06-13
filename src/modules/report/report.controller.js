@@ -160,7 +160,7 @@ export const getTutorReport = asyncHandler ( async (req, res, next) => {
 
     // const report = await Report.findById(req.params.id);
     
-    const report = await Report.findById(req.params.id)
+    const report = await Report.findById(req.params.id).populate("session_id")
     if (!report) return next(new Error("report not found" , {cause: 404}))
         console.log("report:" , report);
         

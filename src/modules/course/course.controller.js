@@ -67,7 +67,7 @@ export const deleteCourse = asyncHandler(async (req , res , next) =>{
     //check course in database
     const course = await Course.findById(req.params.id)
     if(!course) return next(new Error("course not found" , {cause: 404}))
-    await course.findByIdAndDelete(course._id)
+    await Course.findByIdAndDelete(course._id)
     // Log activity
     await logActivity({
       userId: req.user.id, // assuming you have auth middleware

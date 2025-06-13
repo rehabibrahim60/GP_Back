@@ -2,7 +2,8 @@ import  jwt  from 'jsonwebtoken';
 import { User } from '../../../DB/models/user.js';
 import { Token } from '../../../DB/models/token.js'
 import { asyncHandler } from '../../utils/asyncHandler.js'
-import bcryptjs from "bcryptjs" 
+import bcryptjs from "bcryptjs"
+import { logActivity } from '../../utils/logActivity.js';
 
 
 

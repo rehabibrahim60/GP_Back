@@ -1,6 +1,6 @@
 import { TutorFlag } from "../../../DB/models/tutorFlag.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
-
+import { logActivity } from "../../utils/logActivity.js";
 export const createTutorFlag = asyncHandler(async (req, res, next) => {
     const tutorFlag = await TutorFlag.create({
         session_id : req.body.session_id,
